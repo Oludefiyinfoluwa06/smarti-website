@@ -88,13 +88,17 @@ export const Pricing: React.FC = () => {
                   ))}
                 </ul>
 
-                <button className={`w-full py-4 px-6 rounded-full font-semibold text-lg transition-all duration-300 ${
-                  tier.popular
-                    ? 'text-white hover:shadow-xl transform hover:scale-105'
-                    : 'border-2 hover:text-white hover:bg-purple-600'
-                }`} style={tier.popular ? {background: 'linear-gradient(135deg, #241153, #1a0d3f)'} : {borderColor: '#241153', color: '#241153'}}>
-                  Start {tier.name}
-                </button>
+                <a
+                  href={`/order?package=${tier.name}`}
+                  className={`block w-full py-4 px-6 rounded-full font-semibold text-lg text-center transition-all duration-300 ${
+                    tier.popular
+                      ? 'text-white hover:shadow-xl transform hover:scale-105'
+                      : 'border-2 hover:text-white hover:bg-purple-600'
+                  }`}
+                  style={tier.popular ? {background: 'linear-gradient(135deg, #241153, #1a0d3f)'} : {borderColor: '#241153', color: '#241153'}}
+                >
+                  Order {tier.name}
+                </a>
               </div>
             </div>
           ))}

@@ -1,4 +1,5 @@
 import { BookOpen } from "lucide-react";
+import Link from "next/link";
 
 export const Header: React.FC = () => {
   return (
@@ -15,20 +16,16 @@ export const Header: React.FC = () => {
           </div>
 
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="text-gray-700 hover:text-purple-600 transition-colors font-medium" style={{'&:hover': {color: '#241153'}} as any}>
+            <Link href="/#features" className="text-gray-700 hover:text-purple-600 transition-colors font-medium" style={{'&:hover': {color: '#241153'}} as any}>
               Features
-            </a>
-            <a href="#pricing" className="text-gray-700 hover:text-purple-600 transition-colors font-medium" style={{'&:hover': {color: '#241153'}} as any}>
+            </Link>
+            <Link href="/#pricing" className="text-gray-700 hover:text-purple-600 transition-colors font-medium" style={{'&:hover': {color: '#241153'}} as any}>
               Pricing
-            </a>
-            <a href="#contact" className="text-gray-700 hover:text-purple-600 transition-colors font-medium" style={{'&:hover': {color: '#241153'}} as any}>
+            </Link>
+            <Link href="/#contact" className="text-gray-700 hover:text-purple-600 transition-colors font-medium" style={{'&:hover': {color: '#241153'}} as any}>
               Contact
-            </a>
+            </Link>
           </nav>
-
-          <button className="text-white px-6 py-2 rounded-full font-medium hover:shadow-lg transition-all duration-300 transform hover:scale-105" style={{background: 'linear-gradient(135deg, #241153, #1a0d3f)'}}>
-            Get Started
-          </button>
         </div>
       </div>
     </header>
