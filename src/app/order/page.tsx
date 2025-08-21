@@ -1,10 +1,7 @@
 import { OrderForm } from "@/components/pages/order/OrderForm";
 
-export default function OrderPage({
-  searchParams,
-}: {
-  searchParams: { package?: string };
-}) {
+export default function OrderPage(props: any) {
+  const searchParams: { package?: string } = props?.searchParams ?? {};
   return (
     <div className="min-h-screen py-24" style={{ background: 'linear-gradient(135deg, #FBFAF7 0%, #F5F4F0 50%, #FBFAF7 100%)' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
