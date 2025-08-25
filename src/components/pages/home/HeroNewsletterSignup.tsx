@@ -37,7 +37,7 @@ export const HeroNewsletterSignup: React.FC = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="flex-1 px-4 py-3 rounded-full border border-gray-300 focus:ring-2 focus:border-transparent outline-none"
-          style={{'--tw-ring-color': '#241153', 'focusRingColor': '#241153'} as any}
+          style={{'--tw-ring-color': '#241153'} as any}
           disabled={isSubmitting}
         />
         <button

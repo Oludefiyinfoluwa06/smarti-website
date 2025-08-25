@@ -1,5 +1,6 @@
-import { ArrowRight, BookOpen, Coffee, Gift, Heart, Palette, RotateCcw, Smartphone, Sparkles, Target, Truck } from "lucide-react";
+import { ArrowRight, RotateCcw, Sparkles, Target, Truck } from "lucide-react";
 import { HeroNewsletterSignup } from "./HeroNewsletterSignup";
+import Image from "next/image";
 
 export const Hero: React.FC = () => {
   return (
@@ -44,7 +45,7 @@ export const Hero: React.FC = () => {
             <div className="grid grid-cols-3 gap-6 pt-8">
               <div className="flex items-center space-x-2 text-gray-600">
                 <Truck className="w-5 h-5" style={{color: '#241153'}} />
-                <span className="font-medium">Shipping</span>
+                <span className="font-medium">Fast Shipping</span>
               </div>
               <div className="flex items-center space-x-2 text-gray-600">
                 <RotateCcw className="w-5 h-5" style={{color: '#241153'}} />
@@ -58,31 +59,19 @@ export const Hero: React.FC = () => {
           </div>
 
           <div className="relative space-y-6">
-            <div className="relative bg-white rounded-3xl shadow-2xl p-8 transform rotate-3 hover:rotate-0 transition-transform duration-500">
-              <div className="absolute -top-4 -right-4 text-white px-4 py-2 rounded-full font-semibold transform rotate-12" style={{background: 'linear-gradient(135deg, #241153, #1a0d3f)'}}>
-                New Box!
-              </div>
-
-              <h3 className="text-2xl font-bold text-center mb-6" style={{color: '#0F0820'}}>
-                What&rsquo;s Inside?
-              </h3>
-
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { icon: BookOpen, label: 'Study Tools', bgColor: 'rgba(36, 17, 83, 0.1)', textColor: '#241153' },
-                  { icon: Heart, label: 'Wellness', bgColor: 'rgba(0, 208, 160, 0.1)', textColor: '#00D0A0' },
-                  { icon: Coffee, label: 'Snacks', bgColor: 'rgba(36, 17, 83, 0.1)', textColor: '#241153' },
-                  { icon: Palette, label: 'Creative', bgColor: 'rgba(0, 208, 160, 0.1)', textColor: '#00D0A0' },
-                  { icon: Gift, label: 'Surprises', bgColor: 'rgba(36, 17, 83, 0.1)', textColor: '#241153' },
-                  { icon: Smartphone, label: 'Digital', bgColor: 'rgba(0, 208, 160, 0.1)', textColor: '#00D0A0' }
-                ].map((item, index) => (
-                  <div key={index} className="bg-gray-50 rounded-xl p-4 text-center hover:shadow-md transition-shadow">
-                    <div className="w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-2" style={{backgroundColor: item.bgColor}}>
-                      <item.icon className="w-6 h-6" style={{color: item.textColor}} />
-                    </div>
-                    <span className="text-sm font-medium text-gray-700">{item.label}</span>
-                  </div>
-                ))}
+            {/* Main Product Image */}
+            <div className="relative">
+              <Image
+                src="/study-essentials.jpg"
+                alt="Student study essentials arranged beautifully"
+                width={500}
+                height={400}
+                className="w-full h-96 object-cover rounded-3xl shadow-2xl"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent rounded-3xl"></div>
+              <div className="absolute bottom-6 left-6 text-white">
+                <h3 className="text-2xl font-bold">Everything You Need</h3>
+                <p className="text-white/90">Curated for success</p>
               </div>
             </div>
 
