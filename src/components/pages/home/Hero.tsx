@@ -28,7 +28,7 @@ export const Hero: React.FC = () => {
 
             <p className="text-xl text-gray-600 leading-relaxed max-w-lg">
               Everything you need to study smarter, stay motivated, and thrive as a student.
-              Delivered monthly with love and care.
+              Delivered with love and care.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">

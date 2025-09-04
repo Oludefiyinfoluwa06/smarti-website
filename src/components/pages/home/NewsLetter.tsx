@@ -1,65 +1,116 @@
 "use client";
 
 import { AlertCircle, CheckCircle, Gift, Send, Sparkles, Zap } from "lucide-react";
+import axios from "axios";
 import { useState } from "react";
 
 export const NewsLetter: React.FC = () => {
-  const [email, setEmail] = useState<string>('');
-  const [name, setName] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
+  const [name, setName] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
+  const [status, setStatus] = useState<null | "pending" | "subscribed">(null);
+  const [error, setError] = useState<string>("");
+  const [submittedEmail, setSubmittedEmail] = useState<string>("");
+
+  const API_BASE = process.env.NEXT_PUBLIC_BASE_API_URL;
+  const SUBSCRIBE_URL = `${API_BASE}/newsletter/subscription/subscribe`;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     setIsSubmitting(true);
-    setError('');
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setError('Please enter a valid email address');
+      setError("Please enter a valid email address");
       setIsSubmitting(false);
       return;
     }
 
     if (!name.trim()) {
-      setError('Please enter your name');
+      setError("Please enter your name");
       setIsSubmitting(false);
       return;
     }
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log('Subscribing:', { name, email });
-      setIsSubscribed(true);
-      setEmail('');
-      setName('');
-    } catch (error: any) {
-      setError(error.message || 'Something went wrong. Please try again.');
-    }
+      const res = await axios.post(
+        SUBSCRIBE_URL,
+        { email: email.trim(), name: name.trim() },
+        { headers: { "Content-Type": "application/json" } }
+      );
 
-    setIsSubmitting(false);
+      const data = res.data ?? {};
+
+      const returnedStatus = (data?.status as string) ?? null;
+
+      setSubmittedEmail(email.trim());
+
+      if (returnedStatus === "pending") {
+        setStatus("pending");
+      } else {
+        setStatus("subscribed");
+      }
+
+      setEmail("");
+      setName("");
+    } catch (err: any) {
+      console.error("Newsletter subscribe error:", err);
+      const serverMsg =
+        err?.response?.data?.error ??
+        err?.response?.data?.message ??
+        (typeof err?.message === "string" ? err.message : null);
+      setError(serverMsg ?? "Something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  if (isSubscribed) {
+  if (status === "subscribed") {
     return (
-      <section className="py-24" style={{background: 'linear-gradient(135deg, rgba(36, 17, 83, 0.1), rgba(0, 208, 160, 0.05))'}}>
+      <section className="py-24" style={{ background: "linear-gradient(135deg, rgba(36, 17, 83, 0.1), rgba(0, 208, 160, 0.05))" }}>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="bg-white rounded-3xl shadow-xl p-12">
-            <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6" style={{backgroundColor: 'rgba(36, 17, 83, 0.1)'}}>
-              <CheckCircle className="w-10 h-10" style={{color: '#241153'}} />
+            <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: "rgba(36, 17, 83, 0.1)" }}>
+              <CheckCircle className="w-10 h-10" style={{ color: "#241153" }} />
             </div>
-            <h2 className="text-3xl font-bold mb-4" style={{color: '#0F0820'}}>
+            <h2 className="text-3xl font-bold mb-4" style={{ color: "#0F0820" }}>
               Welcome to the Smarti Community!
             </h2>
             <p className="text-xl text-gray-600 mb-8">
-              Thank you for subscribing! You&rsquo;ll be the first to know about new boxes,
-              exclusive discounts, and study tips.
+              Thank you for subscribing! You&rsquo;ll be the first to know about new boxes, exclusive discounts, and study tips.
             </p>
             <button
-              onClick={() => setIsSubscribed(false)}
+              onClick={() => setStatus(null)}
               className="font-medium hover:underline"
-              style={{color: '#241153'}}
+              style={{ color: "#241153" }}
+            >
+              Subscribe another email
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (status === "pending") {
+    return (
+      <section className="py-24" style={{ background: "linear-gradient(135deg, rgba(36, 17, 83, 0.1), rgba(0, 208, 160, 0.05))" }}>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="bg-white rounded-3xl shadow-xl p-12">
+            <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: "rgba(36, 17, 83, 0.1)" }}>
+              <CheckCircle className="w-10 h-10" style={{ color: "#241153" }} />
+            </div>
+            <h2 className="text-3xl font-bold mb-4" style={{ color: "#0F0820" }}>
+              Almost there — check your email
+            </h2>
+            <p className="text-xl text-gray-600 mb-8">
+              We sent a confirmation link to <strong>{submittedEmail || "your inbox"}</strong>. Click it to complete your subscription.
+            </p>
+            <button
+              onClick={() => setStatus(null)}
+              className="font-medium hover:underline"
+              style={{ color: "#241153" }}
             >
               Subscribe another email
             </button>
@@ -70,7 +121,7 @@ export const NewsLetter: React.FC = () => {
   }
 
   return (
-    <section className="py-24 relative overflow-hidden" style={{background: 'linear-gradient(135deg, #0F0820, #1a1030)'}}>
+    <section className="py-24 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #0F0820, #1a1030)" }}>
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-white/20 to-transparent"></div>
         <div className="absolute top-20 left-20 w-32 h-32 bg-white/10 rounded-full"></div>
@@ -98,7 +149,7 @@ export const NewsLetter: React.FC = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 className="w-full px-6 py-4 rounded-full border-0 bg-white/90 text-gray-900 placeholder-gray-500 focus:ring-4 focus:outline-none text-lg"
-                style={{'--tw-ring-color': 'rgba(36, 17, 83, 0.3)'} as any}
+                style={{ ["--tw-ring-color" as any]: "rgba(36, 17, 83, 0.3)" }}
                 disabled={isSubmitting}
               />
             </div>
@@ -110,7 +161,7 @@ export const NewsLetter: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-6 py-4 rounded-full border-0 bg-white/90 text-gray-900 placeholder-gray-500 focus:ring-4 focus:outline-none text-lg"
-                style={{'--tw-ring-color': 'rgba(0, 208, 160, 0.3)'} as any}
+                style={{ ["--tw-ring-color" as any]: "rgba(0, 208, 160, 0.3)" }}
                 disabled={isSubmitting}
               />
             </div>
@@ -126,7 +177,7 @@ export const NewsLetter: React.FC = () => {
               type="submit"
               disabled={isSubmitting}
               className="w-full px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none flex items-center justify-center space-x-2"
-              style={{background: 'linear-gradient(135deg, #241153, #1a0d3f)', color: 'white'}}
+              style={{ background: "linear-gradient(135deg, #241153, #1a0d3f)", color: "white" }}
             >
               {isSubmitting ? (
                 <>
