@@ -4,7 +4,7 @@ export const Pricing: React.FC = () => {
   const pricingTiers = [
     {
       name: "StudyLite",
-      price: "₦10,000",
+      price: "₦15,000",
       priceUSD: "$8",
       description: "Perfect for students starting their organized study journey",
       features: [
@@ -20,7 +20,7 @@ export const Pricing: React.FC = () => {
     },
     {
       name: "StudyPro",
-      price: "₦15,000",
+      price: "₦20,000",
       priceUSD: "$11",
       description: "Complete package for serious students who want it all",
       popular: true,

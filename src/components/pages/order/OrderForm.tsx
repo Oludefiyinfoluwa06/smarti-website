@@ -45,8 +45,8 @@ export const OrderForm: React.FC<OrderFormProps> = ({ defaultPackage }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const packages: Record<PackageName, { name: PackageName; price: number; priceUSD: number }> = {
-    StudyLite: { name: "StudyLite", price: 10000, priceUSD: 8 },
-    StudyPro: { name: "StudyPro", price: 15000, priceUSD: 11 },
+    StudyLite: { name: "StudyLite", price: 15000, priceUSD: 10 },
+    StudyPro: { name: "StudyPro", price: 20000, priceUSD: 15 },
   };
 
   // Load Paystack script
