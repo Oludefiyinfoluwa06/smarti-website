@@ -1,6 +1,7 @@
 "use client";
 
-import { BookOpen, Facebook, Instagram, Linkedin, Mail, Twitter } from "lucide-react";
+import { BookOpen, Facebook, Instagram, Linkedin, Twitter } from "lucide-react";
+import Link from "next/link";
 
 export const Footer: React.FC = () => {
   return (
@@ -38,15 +39,13 @@ export const Footer: React.FC = () => {
 
           <div>
             <h3 className="text-xl font-bold mb-4" style={{color: '#241153'}}>Contact</h3>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-gray-300">
-                <Mail className="w-4 h-4" />
-                <span>growth@smarticommunity.com.ng</span>
-              </div>
-              <div className="flex items-center space-x-2 text-gray-300">
-                <Mail className="w-4 h-4" />
-                <span>support@smarticommunity.com.ng</span>
-              </div>
+            <div className="space-y-2 flex flex-col items-start">
+              <Link href="mailto:growth@smarticommunity.com.ng" className="text-gray-300">
+                growth@smarticommunity.com.ng
+              </Link>
+              <Link href="mailto:support@smarticommunity.com.ng" className="text-gray-300">
+                support@smarticommunity.com.ng
+              </Link>
             </div>
           </div>
 

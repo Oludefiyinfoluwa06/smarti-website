@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Check, X, CheckCircle, AlertCircle, Plus, Minus } from "lucide-react";
+import { X, CheckCircle, AlertCircle, Plus, Minus } from "lucide-react";
 import axios from "axios";
 
 interface OrderFormProps {
@@ -31,6 +31,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ defaultPackage }) => {
     email: "",
     phone: "",
     address: "",
+    school: "",
     remember: true, // remember toggle
   });
 
@@ -69,7 +70,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ defaultPackage }) => {
         const parsed = JSON.parse(raw);
         setFormData((prev) => ({ ...prev, ...parsed }));
       }
-    } catch (err) {
+    } catch {
       // ignore
     }
   }, []);
@@ -147,6 +148,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ defaultPackage }) => {
         email: formData.email,
         phone: formData.phone,
         address: formData.address,
+        school: formData.school,
       },
     };
 
@@ -178,6 +180,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ defaultPackage }) => {
         email: formData.email,
         phone: formData.phone,
         address: formData.address,
+        school: formData.school,
         packageItems,
         totalAmount: calculateTotal(),
         paymentReference,
@@ -197,6 +200,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ defaultPackage }) => {
           email: formData.email,
           phone: formData.phone,
           address: formData.address,
+          school: formData.school,
         };
         localStorage.setItem(LOCALSTORAGE_KEY, JSON.stringify(toSave));
       } else {
@@ -277,6 +281,11 @@ export const OrderForm: React.FC<OrderFormProps> = ({ defaultPackage }) => {
           <label className="block text-sm font-medium" style={{ color: "#0F0820" }}>Phone Number</label>
           <input value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className={`mt-1 block w-full rounded-md border ${errors.phone ? "border-red-500" : "border-gray-300"} px-3 py-2`} disabled={isLoading} />
           {errors.phone && <p className="mt-1 text-sm text-red-600">{errors.phone}</p>}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium" style={{ color: "#0F0820" }}>School</label>
+          <input value={formData.school} onChange={(e) => setFormData({ ...formData, school: e.target.value })} className={`mt-1 block w-full rounded-md border px-3 py-2`} disabled={isLoading} />
         </div>
 
         <div>
