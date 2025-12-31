@@ -139,7 +139,7 @@ export const OrderForm: React.FC<OrderFormProps> = ({ defaultPackage }) => {
   };
 
   const handlePaystackPayment = () => {
-    const totalAmount = calculateTotal() * 100;
+    const totalAmount = calculateTotal();
 
     const metadata = {
       packages: selectedPackageItems(),
@@ -152,23 +152,54 @@ export const OrderForm: React.FC<OrderFormProps> = ({ defaultPackage }) => {
       },
     };
 
-    const handler = window.PaystackPop.setup({
-      key: process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
-      email: formData.email,
-      amount: totalAmount,
-      currency: "NGN",
-      ref: `order_${Date.now()}`,
-      metadata,
-      callback: function (response: any) {
-        submitOrder(response.reference, "completed");
-      },
-      onClose: function () {
-        showFlashMessage("error", "Payment was cancelled. Please try again.");
-        setIsLoading(false);
-      },
-    });
+    (async () => {
+      try {
+        const initResp = await axios.post(`${process.env.NEXT_PUBLIC_BASE_API_URL}/payments/init`, {
+          email: formData.email,
+          amount: totalAmount,
+          currency: 'NGN',
+          metadata,
+        });
 
-    handler.openIframe();
+        const data = initResp.data;
+        const authorizationUrl = data?.authorization_url;
+        const reference = data?.reference;
+
+        if (!authorizationUrl || !reference) {
+          throw new Error('Failed to initialize payment');
+        }
+
+        const win = window.open(authorizationUrl, '_blank', 'noopener,noreferrer,width=700,height=600');
+
+        const maxAttempts = 90; // ~3 minutes
+        let attempts = 0;
+
+        const interval = setInterval(async () => {
+          attempts += 1;
+          try {
+            const verifyResp = await axios.post(`${process.env.NEXT_PUBLIC_BASE_API_URL}/payments/verify`, { reference });
+            const paymentRecord = verifyResp.data;
+            if (paymentRecord && paymentRecord.status === 'completed') {
+              clearInterval(interval);
+              if (win && !win.closed) win.close();
+              await submitOrder(reference, 'completed');
+            }
+          } catch (err) {
+            console.error('Polling verify error', err);
+          }
+
+          if (attempts >= maxAttempts) {
+            clearInterval(interval);
+            showFlashMessage('error', 'Payment not confirmed within time limit. You can check your payment history.');
+            setIsLoading(false);
+          }
+        }, 2000);
+      } catch (err) {
+        console.error('Payment init error', err);
+        showFlashMessage('error', 'Could not initiate payment. Please try again later.');
+        setIsLoading(false);
+      }
+    })();
   };
 
   const submitOrder = async (paymentReference: string | null, paymentStatus: string) => {
@@ -226,12 +257,6 @@ export const OrderForm: React.FC<OrderFormProps> = ({ defaultPackage }) => {
 
     if (selectedPackageItems().length === 0) {
       setErrors({ packageType: "Please select at least one package" });
-      setIsLoading(false);
-      return;
-    }
-
-    if (!window.PaystackPop) {
-      showFlashMessage("error", "Payment system is loading. Please try again in a moment.");
       setIsLoading(false);
       return;
     }

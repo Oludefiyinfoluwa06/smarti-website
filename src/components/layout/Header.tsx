@@ -22,6 +22,9 @@ export const Header: React.FC = () => {
             <Link href="/#pricing" className="text-gray-700 hover:text-purple-600 transition-colors font-medium" style={{'&:hover': {color: '#241153'}} as any}>
               Pricing
             </Link>
+            <Link href="/skills" className="text-gray-700 hover:text-purple-600 transition-colors font-medium" style={{'&:hover': {color: '#241153'}} as any}>
+              Learn Skills
+            </Link>
             <Link href="/#contact" className="text-gray-700 hover:text-purple-600 transition-colors font-medium" style={{'&:hover': {color: '#241153'}} as any}>
               Contact
             </Link>
